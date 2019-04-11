@@ -4,12 +4,19 @@
       left: `${posX}px`,
       top: `${posY}px`
     }"
-    class="shikaku">
+    class="shikaku"
+    @mousedown="mouseDown">
+    <text-box />
   </div>
 </template>
 
 <script>
+import TextBox from '~/components/TextBox.vue'
+
 export default {
+  components: {
+    TextBox
+  },
   props: {
     posX: {
       type: Number,
@@ -18,6 +25,11 @@ export default {
     posY: {
       type: Number,
       required: true
+    }
+  },
+  methods: {
+    mouseDown() {
+      this.$emit('mousedowned')
     }
   }
 }
