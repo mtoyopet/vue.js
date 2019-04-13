@@ -7,6 +7,7 @@
         :posX="memoInfo.posX"
         :posY="memoInfo.posY"
         @mousedowned="moveMemo"
+        @dragStart="dragStart(i, $event)"
       />
     </div>
     <add-btn @clicked="addMemo" />
@@ -29,7 +30,9 @@ export default {
           posX: 20,
           posY: 20
         }
-      ]
+      ],
+      isDragging: false,
+      draggingIndex: null
     }
   },
   methods: {
@@ -44,40 +47,9 @@ export default {
         }
       ]
     },
-    moveMemo() {
-      console.log('helll')
-      const shikaku = document.getElementsByClassName('shikaku')[0]
-      shikaku.position = 'absolute'
-
-      let startX, startY, initialMouseX, initialMouseY
-
-      function mousemove(e) {
-        const dx = e.clientX - initialMouseX
-        const dy = e.clientY - initialMouseY
-        shikaku.style.top = startY + dy + 'px'
-        shikaku.style.left = startX + dx + 'px'
-        return false
-      }
-
-      function mouseup() {
-        this.removeEventListener('mousemove', mousemove)
-        this.removeEventListener('mouseup', mouseup)
-      }
-
-      shikaku.addEventListener('mousedown', function (e) {
-        startX = shikaku.offsetLeft
-        startY = shikaku.offsetTop
-        initialMouseX = e.clientX
-        initialMouseY = e.clientY
-
-        console.log('initialMouseX: ' + initialMouseX)
-        console.log('initialMouseY: ' + initialMouseY)
-        // console.log('right before the mousemove event!')
-
-        this.addEventListener('mousemove', mousemove)
-        this.addEventListener('mouseup', mouseup)
-        return false
-      })
+    dragStart(i, $event) {
+      this.isDragging = true
+      this.draggingIndex = i
     }
   }
 }

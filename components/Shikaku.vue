@@ -5,16 +5,21 @@
       top: `${posY}px`
     }"
     class="shikaku"
-    @mousedown="mouseDown">
+    >
+    <drag-handler
+      @dragStart="$emit('dragStart', $event)"
+    />
     <text-box />
   </div>
 </template>
 
 <script>
+import DragHandler from '~/components/DragHandler.vue'
 import TextBox from '~/components/TextBox.vue'
 
 export default {
   components: {
+    DragHandler,
     TextBox
   },
   props: {
@@ -28,9 +33,6 @@ export default {
     }
   },
   methods: {
-    mouseDown() {
-      this.$emit('mousedowned')
-    }
   }
 }
 </script>
