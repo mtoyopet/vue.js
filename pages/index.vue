@@ -50,7 +50,7 @@ export default {
       this.draggingIndex = null
     },
     dragging($event) {
-      if (!this.isDragging) return
+      if (this.isDragging === false) return
 
       this.$store.commit('dragMemo', {
         index: this.draggingIndex,
@@ -64,7 +64,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .container {
   margin: 0 auto;
   min-height: 100vh;

@@ -1,16 +1,26 @@
 export const state = () => ({
   memoInfoList: [
     {
-      posX: 20,
+      posX: 50,
       posY: 20,
-      text: 'fafewafa'
+      text: 'fafewafa',
+      background: '#f8e604'
     }
   ]
 })
 
-// export const plugins = [
-//   (store)
-// ]
+export const plugins = [
+  (store) => {
+    store.subscribe(() => {
+      localStorage.memoData = JSON.stringify(store.state.memoInfoList)
+    })
+  },
+  (store) => {
+    if (localStorage.memoData) {
+      store.commit('initMemo', JSON.parse(localStorage.memoData))
+    }
+  }
+]
 
 export const mutations = {
   initMemo(state, memoData) {
@@ -29,6 +39,8 @@ export const mutations = {
     ]
   },
   removeMemo(state, i) {
+    console.log(i)
+    console.log(state)
     state.memoInfoList = state.memoInfoList.filter((shikaku, index) => index !== i)
   },
   dragMemo(state, { index, deltaX, deltaY }) {
@@ -41,6 +53,30 @@ export const mutations = {
         }
       } else {
         return shikaku
+      }
+    })
+  },
+  changeToRed(state, index) {
+    state.memoInfoList = state.memoInfoList.map((memoInfo, i) => {
+      if (i === index) {
+        return {
+          ...memoInfo,
+          backgroundColor: '#fffff'
+        }
+      } else {
+        return memoInfo
+      }
+    })
+  },
+  setText(state, { text, index }) {
+    state.memoInfoList = state.memoInfoList.map((memoInfo, i) => {
+      if (i === index) {
+        return {
+          ...memoInfo,
+          text
+        }
+      } else {
+        return memoInfo
       }
     })
   }

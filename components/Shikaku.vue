@@ -2,15 +2,20 @@
   <div
     :style="{
       left: `${posX}px`,
-      top: `${posY}px`
+      top: `${posY}px`,
+      background: `${background}`
     }"
     class="shikaku"
-    >
+  >
     <drag-handler
       @dragStart="$emit('dragStart', $event)"
     />
-    <delete-btn @remove="$store.commit('removeMemo')"/>
-    <text-box />
+    <delete-btn @remove="$store.commit('removeMemo', index)" />
+    <text-box
+      :text="text"
+      @inputed="onInputed"
+    />
+    <red-color-btn @change-to-red="$store.commit('changeToRed', index)" />
   </div>
 </template>
 
@@ -18,12 +23,14 @@
 import DeleteBtn from '~/components/DeleteBtn.vue'
 import DragHandler from '~/components/DragHandler.vue'
 import TextBox from '~/components/TextBox.vue'
+import RedColorBtn from '~/components/RedColorBtn.vue'
 
 export default {
   components: {
     DeleteBtn,
     DragHandler,
-    TextBox
+    TextBox,
+    RedColorBtn
   },
   props: {
     posX: {
@@ -36,6 +43,10 @@ export default {
     },
     index: {
       type: Number,
+      required: true
+    },
+    background: {
+      type: String,
       required: true
     }
   },
@@ -50,11 +61,10 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .shikaku {
   position: fixed;
   width: 200px;
   height: 300px;
-  background: #ff0;
 }
 </style>

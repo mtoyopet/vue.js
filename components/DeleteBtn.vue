@@ -7,11 +7,6 @@
 
 <script>
 export default {
-  methods: {
-    deleted() {
-      this.$emit('delete-clicked')
-    }
-  }
 }
 </script>
 
