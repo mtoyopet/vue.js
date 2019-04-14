@@ -1,7 +1,7 @@
 <template>
   <div
   class="drag-handler"
-  @mousedown="$emit('dragStart', $event)" 
+  @mousedown="$emit('dragStart', $event)"
   />
 </template>
 

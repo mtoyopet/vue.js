@@ -1,16 +1,23 @@
 <template>
-  <section class="container">
+  <section
+    class="container"
+    @mouseup="dragEnd"
+    @mousemove="dragging"
+  >
     <div>
       <shikaku
-        v-for="(memoInfo, i) in memoInfoList"
+        v-for="(memoInfo, i) in $store.state.memoInfoList"
         :key="i"
         :posX="memoInfo.posX"
         :posY="memoInfo.posY"
-        @mousedowned="moveMemo"
+        :text="memoInfo.text"
+        :index="i"
         @dragStart="dragStart(i, $event)"
+        @dragEnd="dragEnd"
+        @dragging="dragging"
       />
     </div>
-    <add-btn @clicked="addMemo" />
+    <add-btn @clicked="$store.commit('addMemo')" />
   </section>
 </template>
 
@@ -25,31 +32,33 @@ export default {
   },
   data() {
     return {
-      memoInfoList: [
-        {
-          posX: 20,
-          posY: 20
-        }
-      ],
       isDragging: false,
-      draggingIndex: null
+      draggingIndex: null,
+      prevX: null,
+      prevY: null
     }
   },
   methods: {
-    addMemo() {
-      const lastMemo = this.memoInfoList[this.memoInfoList.length - 1]
-
-      this.memoInfoList = [
-        ...this.memoInfoList,
-        {
-          posX: lastMemo.posX + 120,
-          posY: lastMemo.posY + 40
-        }
-      ]
-    },
     dragStart(i, $event) {
       this.isDragging = true
       this.draggingIndex = i
+      this.prevX = $event.pageX
+      this.prevY = $event.pageY
+    },
+    dragEnd() {
+      this.isDragging = false
+      this.draggingIndex = null
+    },
+    dragging($event) {
+      if (!this.isDragging) return
+
+      this.$store.commit('dragMemo', {
+        index: this.draggingIndex,
+        deltaX: $event.pageX - this.prevX,
+        deltaY: $event.pageY - this.prevY
+      })
+      this.prevX = $event.pageX
+      this.prevY = $event.pageY
     }
   }
 }

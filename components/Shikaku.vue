@@ -9,16 +9,19 @@
     <drag-handler
       @dragStart="$emit('dragStart', $event)"
     />
+    <delete-btn @remove="$store.commit('removeMemo')"/>
     <text-box />
   </div>
 </template>
 
 <script>
+import DeleteBtn from '~/components/DeleteBtn.vue'
 import DragHandler from '~/components/DragHandler.vue'
 import TextBox from '~/components/TextBox.vue'
 
 export default {
   components: {
+    DeleteBtn,
     DragHandler,
     TextBox
   },
@@ -30,9 +33,19 @@ export default {
     posY: {
       type: Number,
       required: true
+    },
+    index: {
+      type: Number,
+      required: true
     }
   },
   methods: {
+    onInputed(text) {
+      this.$store.commit('setText', {
+        test: text, // textだけでもOK
+        index: this.index
+      })
+    }
   }
 }
 </script>
