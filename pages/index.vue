@@ -1,15 +1,24 @@
 <template>
-  <section class="container">
+  <section
+    class="container"
+    @mouseup="dragEnd"
+    @mousemove="dragging"
+  >
     <div>
       <shikaku
-        v-for="(memoInfo, i) in memoInfoList"
+        v-for="(memoInfo, i) in $store.state.memoInfoList"
         :key="i"
         :posX="memoInfo.posX"
         :posY="memoInfo.posY"
-        @mousedowned="moveMemo"
+        :text="memoInfo.text"
+        :index="i"
+        :bgColor="memoInfo.color"
+        @dragStart="dragStart(i, $event)"
+        @dragEnd="dragEnd"
+        @dragging="dragging"
       />
     </div>
-    <add-btn @clicked="addMemo" />
+    <add-btn @clicked="$store.commit('addMemo')" />
   </section>
 </template>
 
@@ -24,66 +33,39 @@ export default {
   },
   data() {
     return {
-      memoInfoList: [
-        {
-          posX: 20,
-          posY: 20
-        }
-      ]
+      isDragging: false,
+      draggingIndex: null,
+      prevX: null,
+      prevY: null
     }
   },
   methods: {
-    addMemo() {
-      const lastMemo = this.memoInfoList[this.memoInfoList.length - 1]
-
-      this.memoInfoList = [
-        ...this.memoInfoList,
-        {
-          posX: lastMemo.posX + 120,
-          posY: lastMemo.posY + 40
-        }
-      ]
+    dragStart(i, $event) {
+      this.isDragging = true
+      this.draggingIndex = i
+      this.prevX = $event.pageX
+      this.prevY = $event.pageY
     },
-    moveMemo() {
-      console.log('helll')
-      const shikaku = document.getElementsByClassName('shikaku')[0]
-      shikaku.position = 'absolute'
+    dragEnd() {
+      this.isDragging = false
+      this.draggingIndex = null
+    },
+    dragging($event) {
+      if (this.isDragging === false) return
 
-      let startX, startY, initialMouseX, initialMouseY
-
-      function mousemove(e) {
-        const dx = e.clientX - initialMouseX
-        const dy = e.clientY - initialMouseY
-        shikaku.style.top = startY + dy + 'px'
-        shikaku.style.left = startX + dx + 'px'
-        return false
-      }
-
-      function mouseup() {
-        this.removeEventListener('mousemove', mousemove)
-        this.removeEventListener('mouseup', mouseup)
-      }
-
-      shikaku.addEventListener('mousedown', function (e) {
-        startX = shikaku.offsetLeft
-        startY = shikaku.offsetTop
-        initialMouseX = e.clientX
-        initialMouseY = e.clientY
-
-        console.log('initialMouseX: ' + initialMouseX)
-        console.log('initialMouseY: ' + initialMouseY)
-        // console.log('right before the mousemove event!')
-
-        this.addEventListener('mousemove', mousemove)
-        this.addEventListener('mouseup', mouseup)
-        return false
+      this.$store.commit('dragMemo', {
+        index: this.draggingIndex,
+        deltaX: $event.pageX - this.prevX,
+        deltaY: $event.pageY - this.prevY
       })
+      this.prevX = $event.pageX
+      this.prevY = $event.pageY
     }
   }
 }
 </script>
 
-<style>
+<style scoped>
 .container {
   margin: 0 auto;
   min-height: 100vh;
@@ -91,7 +73,9 @@ export default {
   justify-content: center;
   align-items: center;
   text-align: center;
-  background: center/cover url('~assets/background.jpg');
+  background: center/cover url('~assets/mountains.jpg');
+  filter: blur(8px);
+  -webkit-filter: blur(8px);
 }
 
 .title {

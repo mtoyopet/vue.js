@@ -1,15 +1,22 @@
 <template>
   <textarea
     class="text-box"
+    :value="text"
     @input="onInput"
   />
 </template>
 
 <script>
 export default {
+  props: {
+    text: {
+      type: String,
+      required: true
+    }
+  },
   methods: {
-    onClick() {
-      this.$emit('inputed')
+    onInput(e) {
+      this.$emit('inputed', e.target.value)
     }
   }
 }
@@ -18,10 +25,10 @@ export default {
 <style>
 .text-box {
   position: absolute;
-  bottom: 0;
+  bottom: 43px;
   top: 60px;
   left: 0;
   width: 200px;
-  background-color: #ff0;
+  background-color: transparent;
   }
 </style>
