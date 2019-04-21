@@ -12,6 +12,7 @@
         :posY="memoInfo.posY"
         :text="memoInfo.text"
         :index="i"
+        :bgColor="memoInfo.color"
         @dragStart="dragStart(i, $event)"
         @dragEnd="dragEnd"
         @dragging="dragging"
@@ -72,7 +73,9 @@ export default {
   justify-content: center;
   align-items: center;
   text-align: center;
-  background: center/cover url('~assets/background.jpg');
+  background: center/cover url('~assets/mountains.jpg');
+  filter: blur(8px);
+  -webkit-filter: blur(8px);
 }
 
 .title {

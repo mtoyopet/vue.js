@@ -1,12 +1,19 @@
 <template>
   <textarea
     class="text-box"
+    :value="text"
     @input="onInput"
   />
 </template>
 
 <script>
 export default {
+  props: {
+    text: {
+      type: String,
+      required: true
+    }
+  },
   methods: {
     onInput(e) {
       this.$emit('inputed', e.target.value)

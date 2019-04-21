@@ -3,7 +3,7 @@
     :style="{
       left: `${posX}px`,
       top: `${posY}px`,
-      background: `${background}`
+      background: bgColor
     }"
     class="shikaku"
   >
@@ -15,7 +15,14 @@
       :text="text"
       @inputed="onInputed"
     />
-    <red-color-btn @change-to-red="$store.commit('changeToRed', index)" />
+    <div class="color-pallet">
+      <color-btn
+      v-for="color in colorList"
+      :key="color"
+      :color="color"
+      :index="index"
+      />
+    </div>
   </div>
 </template>
 
@@ -23,14 +30,14 @@
 import DeleteBtn from '~/components/DeleteBtn.vue'
 import DragHandler from '~/components/DragHandler.vue'
 import TextBox from '~/components/TextBox.vue'
-import RedColorBtn from '~/components/RedColorBtn.vue'
+import ColorBtn from '~/components/ColorBtn.vue'
 
 export default {
   components: {
     DeleteBtn,
     DragHandler,
     TextBox,
-    RedColorBtn
+    ColorBtn
   },
   props: {
     posX: {
@@ -41,14 +48,21 @@ export default {
       type: Number,
       required: true
     },
+    text: {
+      type: String,
+      required: true
+    },
     index: {
       type: Number,
       required: true
     },
-    background: {
+    bgColor: {
       type: String,
       required: true
     }
+  },
+  computed: {
+    colorList: () => ['#D9EBF7', '#C6F7F8', '#B7E1E5', '#A5B7B8']
   },
   methods: {
     onInputed(text) {
@@ -66,5 +80,10 @@ export default {
   position: fixed;
   width: 200px;
   height: 300px;
+}
+
+.color-pallet {
+  position: absolute;
+  bottom: 0;
 }
 </style>

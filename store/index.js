@@ -1,10 +1,10 @@
 export const state = () => ({
   memoInfoList: [
     {
-      posX: 50,
+      posX: 20,
       posY: 20,
-      text: 'fafewafa',
-      background: '#f8e604'
+      text: 'faaaaaafewafaaaaa',
+      color: '#D9EBF7'
     }
   ]
 })
@@ -34,34 +34,33 @@ export const mutations = {
       {
         posX: lastMemo.posX + 220,
         posY: lastMemo.posY + 20,
-        text: ''
+        text: '',
+        color: '#DEE2FF'
       }
     ]
   },
   removeMemo(state, i) {
-    console.log(i)
-    console.log(state)
     state.memoInfoList = state.memoInfoList.filter((shikaku, index) => index !== i)
   },
   dragMemo(state, { index, deltaX, deltaY }) {
-    state.memoInfoList = state.memoInfoList.map((shikaku, i) => {
-      if (i === index) {
-        return {
-          ...shikaku,
-          posX: shikaku.posX + deltaX,
-          posY: shikaku.posY + deltaY
-        }
-      } else {
-        return shikaku
-      }
-    })
-  },
-  changeToRed(state, index) {
     state.memoInfoList = state.memoInfoList.map((memoInfo, i) => {
       if (i === index) {
         return {
           ...memoInfo,
-          backgroundColor: '#fffff'
+          posX: memoInfo.posX + deltaX,
+          posY: memoInfo.posY + deltaY
+        }
+      } else {
+        return memoInfo
+      }
+    })
+  },
+  changeColor(state, { color, index }) {
+    state.memoInfoList = state.memoInfoList.map((memoInfo, i) => {
+      if (i === index) {
+        return {
+          ...memoInfo,
+          color
         }
       } else {
         return memoInfo
